@@ -1,14 +1,26 @@
 
 import express from 'express';
+import configViewEngine from './configs/viewEngine.js';
+import dotenv from 'dotenv';
+import routes from './routes';
+dotenv.config();
+
 const app = express()
-import configViewEngine from './config/viewEngine';
-const port = 8080
+const port = process.env.PORT || 8080;
 
-// configViewEngine(app);
+// Middleware
+app.use(
+  express.urlencoded({
+    extended: true,
+  }),
+);
+app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!, My name is Dong')
-})
+// Template engine
+configViewEngine(app);
+
+// routes
+routes.initWebRoute(app);
 
 app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}/ `);
